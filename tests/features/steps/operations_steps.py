@@ -1,6 +1,7 @@
 """Behave tests."""
 from behave import given, when, then
 from operations.simple import Simple
+from melitk.restclient import new_restclient
 
 
 @given('two numbers')
@@ -46,7 +47,7 @@ def step_impl(context) -> int:
 
 
 @given("two numbers {first} and {second}")
-def step_implTwo(context, first, second) -> None:
+def step_impl_two(context, first, second) -> None:
     """Given."""
     context.first_number = first
     context.second_number = second
@@ -77,3 +78,19 @@ def step_impl_result(context, result) -> None:
 
     assert type(ret) is int
     assert ret == result
+
+@given(u'the url "{url}"')
+def step_impl(context, url):
+    context.url = url
+
+@when(u'we mock the url to get the response "{response}"')
+def step_impl(context, response):
+    context.response = response
+
+@then(u'the content of the response should be "{response}"')
+def step_impl(context, response):
+    rc = new_restclient()
+    with context.restclient_mock() as m:
+        m.get(context.url, text=context.response)
+        asd = rc.get(context.url)
+        assert asd.text == context.response

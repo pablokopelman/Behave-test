@@ -41,3 +41,9 @@ Feature: showing off behave
             | first | second | result |
             | 1     | 2      | 3      |
             | 2     | 3      | 5      |
+
+    @fixture.restclient_mock
+    Scenario: Restclient.
+        Given the url "www.google.com"
+        When we mock the url to get the response "hoooola"
+        Then the content of the response should be "hoooola"
