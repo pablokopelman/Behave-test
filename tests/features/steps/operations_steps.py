@@ -2,6 +2,7 @@
 from behave import given, when, then
 from operations.simple import Simple
 from melitk.restclient import new_restclient
+from melitk import restclient_mock
 
 
 @given('two numbers')
@@ -90,7 +91,7 @@ def step_impl(context, response):
 @then(u'the content of the response should be "{response}"')
 def step_impl(context, response):
     rc = new_restclient()
-    with context.restclient_mock() as m:
+    with restclient_mock.Mocker() as m:
         m.get(context.url, text=context.response)
         asd = rc.get(context.url)
         assert asd.text == context.response
